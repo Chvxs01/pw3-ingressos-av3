@@ -4,7 +4,9 @@ import br.com.etechoracio.ingresso.enums.CategoriaFilmeEnum;
 import br.com.etechoracio.ingresso.enums.ClassificacaoIndicativaEnum;
 import br.com.etechoracio.ingresso.enums.SimNaoEnum;
 
-public record FilmeResponseDTO(
+import java.util.List;
+
+public record FilmeSessoesResponseDTO(
         Long id,
         String nome,
         long duracao,
@@ -16,6 +18,7 @@ public record FilmeResponseDTO(
         String elenco,
         String descricao,
         Double avaliacao,
-        SimNaoEnum emCartaz
+        SimNaoEnum emCartaz,
+        List<SessaoSalaResponseDTO> sessoes
 ) { }
 
