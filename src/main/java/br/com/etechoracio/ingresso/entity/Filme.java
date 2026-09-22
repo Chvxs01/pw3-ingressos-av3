@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -55,5 +57,11 @@ public class Filme {
     @Enumerated(EnumType.STRING)
     @Column(name = "CHK_EM_CARTAZ")
     private SimNaoEnum emCartaz;
+
+    @Column(name = "DT_EXCLUSAO")
+    private LocalDateTime dataExclusao;
+
+    @Transient //Não tem coluna no banco de dados
+    private List<Sessao> sessoes;
 
 }
