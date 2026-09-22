@@ -1,14 +1,18 @@
 package br.com.etechoracio.ingresso.service;
 
 import br.com.etechoracio.ingresso.dto.FilmeResponseDTO;
-import br.com.etechoracio.ingresso.entity.Filme;
+import br.com.etechoracio.ingresso.dto.FilmeSessoesResponseDTO;
+import br.com.etechoracio.ingresso.entity.Sessao;
+import br.com.etechoracio.ingresso.enums.SimNaoEnum;
 import br.com.etechoracio.ingresso.mapper.FilmeMapper;
 import br.com.etechoracio.ingresso.repository.FilmeRepository;
+import br.com.etechoracio.ingresso.repository.SessaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FilmeService {
@@ -19,15 +23,20 @@ public class FilmeService {
     @Autowired
     private FilmeMapper filmeMapper;
 
-    public List<FilmeResponseDTO> findAll() {
-        var result = filmeRepository.findAll();
-        return filmeMapper.toResponseDTOList(result);
+    @Autowired
+    private SessaoRepository sessaoRepository;
+
+    public List<FilmeResponseDTO> findByEmCartaz() {
+        var result = filmeRepository.findByEmCartazAndDataExclusaoIsNull(SimNaoEnum.S);
+        return filmeMapper.toRespostaDTOList(result);
     }
 
-    @Transactional
-    public Filme create(Filme filme) {
-        return filmeRepository.save(filme);
+    public Optional<FilmeSessoesResponseDTO> findByIdWithSessoes(Long id){
+        return filmeRepository.findById(id).map(filme ->{
+            var sessoes = sessaoRepository.findByIdFilme(id, LocalDateTime.now());
+            filme.setSessoes(sessoes);
+            return filmeMapper.toSessoesResponseDTO(filme);
+        });
     }
-
 
 }
